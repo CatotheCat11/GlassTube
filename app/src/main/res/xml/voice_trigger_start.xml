@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trigger command="FIND_A_VIDEO" >
+    <constraints
+        network="true" />
+    <input prompt="Search for a video..." />
+</trigger>
