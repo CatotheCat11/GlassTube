@@ -40,6 +40,7 @@ public class VideoActivity extends Activity {
     private Slider.Indeterminate mIndeterminate;
     private static final String TAG = "VideoActivity";
     String videoUrl = "";
+    AsyncTask<Void, Void, StreamInfo> task;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class VideoActivity extends Activity {
                 }
             }
         }
-        new FetchVideoStreamsTask().execute();
+        task = new FetchVideoStreamsTask().execute();
     }
 
     public class FetchVideoStreamsTask extends AsyncTask<Void, Void, StreamInfo> {
@@ -170,6 +171,7 @@ public class VideoActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        task.cancel(true);
         if (player != null) {
             player.release();
         }
