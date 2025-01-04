@@ -16,4 +16,4 @@ This will load the first 20 results, which you can select from by tapping on a v
 
 The app can also be used to open YouTube links from other apps, such as QR code scanner apps. It will be shown as an option when choosing which app to use to open the link.
 
-<img height="200" alt="Frame 8" src="https://github.com/user-attachments/assets/e60eac9a-e9ec-417d-812a-47131dba1f53" />
+<img height="200" alt="App selection" src="https://github.com/user-attachments/assets/e60eac9a-e9ec-417d-812a-47131dba1f53" />
