@@ -171,7 +171,7 @@ public class MainActivity extends Activity {
                         String url = videoItem.getUrl();
                         videoResults.add(url);
                         String uploaderName = videoItem.getUploaderName();
-                        long viewCount = videoItem.getViewCount();
+                        String viewCount = round(videoItem.getViewCount());
                         String duration = "";
                         if (videoItem.getDuration() != -1) {
                             duration = formatDuration(videoItem.getDuration());
@@ -183,7 +183,7 @@ public class MainActivity extends Activity {
                         CardBuilder card = new CardBuilder(MainActivity.this, CardBuilder.Layout.CAPTION)
                                 .setText(title)
                                 .setFootnote(uploaderName + " • " + viewCount + " views")
-                                .setTimestamp(duration + " seconds");
+                                .setTimestamp(duration);
                         mCards.add(card);
                         Glide.with(MainActivity.this)
                                 .asBitmap()
@@ -240,26 +240,18 @@ public class MainActivity extends Activity {
             return "Invalid duration";
         }
 
-        long days = seconds / (24 * 60 * 60);
-        long hours = (seconds % (24 * 60 * 60)) / (60 * 60);
-        long minutes = (seconds % (60 * 60)) / 60;
+        long minutes = seconds / 60;
         long remainingSeconds = seconds % 60;
 
-        StringBuilder formatted = new StringBuilder();
-
-        if (days > 0) {
-            formatted.append(days).append("d ");
+        return String.format("%02d:%02d", minutes, remainingSeconds);
+    }
+    public static String round(Long val) {
+        if (val >= 1000000) {
+            return String.format("%.1fM", val / 1000000.0);
+        } else if (val >= 1000) {
+            return String.format("%.1fK", val / 1000.0);
+        } else {
+            return val.toString();
         }
-        if (hours > 0) {
-            formatted.append(hours).append("h ");
-        }
-        if (minutes > 0) {
-            formatted.append(minutes).append("m ");
-        }
-        if (remainingSeconds > 0 || formatted.length() == 0) {
-            formatted.append(remainingSeconds).append("s");
-        }
-
-        return formatted.toString().trim();
     }
 }
