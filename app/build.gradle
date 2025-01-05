@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace 'com.cato.glasstube'
+    namespace 'com.catothecat.glasstube'
     compileSdk 34
 
     defaultConfig {

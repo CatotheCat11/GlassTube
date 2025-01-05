@@ -1,4 +1,4 @@
-package com.cato.glasstube;
+package com.catothecat.glasstube;
 
 import android.app.Activity;
 import android.content.Context;

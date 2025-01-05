@@ -1,9 +1,8 @@
-package com.cato.glasstube;
+package com.catothecat.glasstube;
 
 import static android.content.ContentValues.TAG;
 
 import android.app.Activity;
-import android.app.appsearch.SearchResult;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -28,19 +27,15 @@ import com.google.android.glass.widget.CardBuilder;
 import com.google.android.glass.widget.CardScrollAdapter;
 import com.google.android.glass.widget.CardScrollView;
 
-import org.schabi.newpipe.extractor.Image;
 import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.StreamingService;
-import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.search.SearchInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MainActivity extends Activity {
     private List<CardBuilder> mCards;
