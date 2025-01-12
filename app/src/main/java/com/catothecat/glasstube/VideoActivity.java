@@ -3,6 +3,7 @@ package com.catothecat.glasstube;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -50,6 +52,8 @@ public class VideoActivity extends Activity {
     String videoUrl = "";
     AsyncTask<Void, Void, StreamInfo> task;
     private ImageView captionIcon;
+    private LinearLayout controlBar;
+    private boolean controlsVisible = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -159,6 +163,7 @@ public class VideoActivity extends Activity {
             playerView = findViewById(R.id.playerView);
         }
         captionIcon = playerView.findViewById(R.id.exo_caption_icon);
+        controlBar = playerView.findViewById(R.id.control_bar);
 
         LoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
@@ -175,7 +180,6 @@ public class VideoActivity extends Activity {
                 // Limit video resolution to match Glass display
                 .setVideoScalingMode(C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING)
                 .build();
-
         player.addListener(new Player.Listener() {
             @Override
             public void onPlaybackStateChanged(int state) {
@@ -190,6 +194,13 @@ public class VideoActivity extends Activity {
         playerView.setPlayer(player);
         subtitleView = playerView.getSubtitleView();
         subtitleView.setFixedTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
+        subtitleView.setVisibility(View.GONE);
+        playerView.setControllerShowTimeoutMs(0);
+        playerView.setControllerHideOnTouch(false);
+        controlBar.postDelayed(() -> {
+            controlBar.setVisibility(View.GONE);
+            controlsVisible = false;
+        }, 3000);
         player.setMediaItem(mediaItem);
         player.setWakeMode(C.WAKE_MODE_NETWORK);
         player.prepare();
@@ -210,7 +221,18 @@ public class VideoActivity extends Activity {
         gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                playerView.showController();
+                View current = getCurrentFocus();
+                if (controlBar != null) {
+                    if (!controlsVisible) {
+                        controlBar.setVisibility(View.VISIBLE);
+                        controlsVisible = true;
+                        // Auto-hide after delay
+                        controlBar.postDelayed(() -> {
+                            controlBar.setVisibility(View.GONE);
+                            controlsVisible = false;
+                        }, 3000);
+                    }
+                }
                 if (gesture == Gesture.TAP) {
                     if (player.isPlaying()) {
                         player.pause();
