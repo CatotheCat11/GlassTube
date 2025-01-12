@@ -30,6 +30,25 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <ImageButton android:id="@id/exo_play"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/play"/>
+
+        <ImageButton android:id="@id/exo_pause"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/pause"/>
+
+        <ImageView
+            android:id="@+id/exo_caption_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/cc_disabled"/>
+
         <TextView android:id="@id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
