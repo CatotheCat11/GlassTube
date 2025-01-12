@@ -23,7 +23,7 @@
     android:orientation="vertical"
     tools:targetApi="28">
 
-    <LinearLayout
+    <LinearLayout android:id="@id/control_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -34,13 +34,15 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/play"/>
+            android:src="@drawable/play"
+            android:background="@android:color/transparent"/>
 
         <ImageButton android:id="@id/exo_pause"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/pause"/>
+            android:src="@drawable/pause"
+            android:background="@android:color/transparent"/>
 
         <ImageView
             android:id="@+id/exo_caption_icon"
