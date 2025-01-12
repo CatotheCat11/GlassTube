@@ -24,5 +24,5 @@ In the video player, there are a few controls you can use:
 3. Swipe backward to seek backward 5 seconds.
 4. Tap with two fingers to enable/disable closed captions.
 
-<img width="640" alt="Video player" src="https://github.com/user-attachments/assets/a0f08b80-d606-4452-acf9-80b55cb594e7" />
+<img height="180" alt="Video player" src="https://github.com/user-attachments/assets/a0f08b80-d606-4452-acf9-80b55cb594e7" />
 
