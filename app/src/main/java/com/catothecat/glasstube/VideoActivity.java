@@ -7,8 +7,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -17,6 +20,8 @@ import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.ui.SubtitleView;
+import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.Slider;
@@ -27,6 +32,7 @@ import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
+import org.schabi.newpipe.extractor.stream.SubtitlesStream;
 import org.schabi.newpipe.extractor.stream.VideoStream;
 
 import java.io.IOException;
@@ -38,9 +44,12 @@ public class VideoActivity extends Activity {
     private GestureDetector mGestureDetector;
     private Slider mSlider;
     private Slider.Indeterminate mIndeterminate;
+    private SubtitleView subtitleView;
+    private boolean subtitlesEnabled = false;
     private static final String TAG = "VideoActivity";
     String videoUrl = "";
     AsyncTask<Void, Void, StreamInfo> task;
+    private ImageView captionIcon;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -91,6 +100,7 @@ public class VideoActivity extends Activity {
                 Log.e(TAG, "Failed to fetch stream info");
                 finish();
             }
+            String videoStreamUrl = null;
 
             try {
                 // Check if it's a live stream
@@ -99,7 +109,7 @@ public class VideoActivity extends Activity {
                     String manifestUrl = streamInfo.getHlsUrl();
                     if (manifestUrl != null && !manifestUrl.isEmpty()) {
                         Log.d(TAG, "Playing HLS stream: " + manifestUrl);
-                        playVideo(manifestUrl, false);
+                        videoStreamUrl = manifestUrl;
                         return;
                     }
                 }
@@ -115,10 +125,26 @@ public class VideoActivity extends Activity {
                         Log.d(TAG, String.format("Stream: %s, Resolution: %s, Format: %s",
                                 stream.getUrl(), stream.getResolution(), stream.getFormat().getName()));
                     }
-                    playVideo(videoStreams.get(0).getUrl(), false); //TODO: How to detect if video is 360?
+                    videoStreamUrl = videoStreams.get(0).getUrl();
                 } else {
                     Log.e(TAG, "No video streams available");
                 }
+                // Build the MediaItem with subtitles
+                MediaItem.Builder mediaItemBuilder = new MediaItem.Builder()
+                        .setUri(videoStreamUrl);
+                List<SubtitlesStream> subtitleStreams = streamInfo.getSubtitles();
+                if (subtitleStreams != null && !subtitleStreams.isEmpty()) {
+                    for (SubtitlesStream subtitle : subtitleStreams) {
+                        MediaItem.SubtitleConfiguration subtitleConfig = new MediaItem.SubtitleConfiguration.Builder(Uri.parse(subtitle.getUrl()))
+                                .setLanguage(subtitle.getLanguageTag())
+                                .setMimeType(subtitle.getFormat().getMimeType())
+                                .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+                                .build();
+                        mediaItemBuilder.setSubtitleConfigurations(List.of(subtitleConfig));
+                        break; // For now, just add the first subtitle track
+                    }
+                }
+                playVideo(mediaItemBuilder.build(), false); //TODO: How to detect if video is 360?
             } catch (Exception e) {
                 Log.e(TAG, "Error processing stream info", e);
                 finish();
@@ -126,12 +152,13 @@ public class VideoActivity extends Activity {
         }
     }
 
-    private void playVideo(String streamUrl, Boolean sphereView) {
+    private void playVideo(MediaItem mediaItem, Boolean sphereView) {
         if (sphereView) {
             setContentView(R.layout.video_view_360);
             mGestureDetector = createGestureDetector(this);
             playerView = findViewById(R.id.playerView);
         }
+        captionIcon = playerView.findViewById(R.id.exo_caption_icon);
 
         LoadControl loadControl = new DefaultLoadControl.Builder()
                 .setBufferDurationsMs(
@@ -161,7 +188,8 @@ public class VideoActivity extends Activity {
         });
 
         playerView.setPlayer(player);
-        MediaItem mediaItem = MediaItem.fromUri(streamUrl);
+        subtitleView = playerView.getSubtitleView();
+        subtitleView.setFixedTextSize(TypedValue.COMPLEX_UNIT_DIP, 24);
         player.setMediaItem(mediaItem);
         player.setWakeMode(C.WAKE_MODE_NETWORK);
         player.prepare();
@@ -196,6 +224,14 @@ public class VideoActivity extends Activity {
                     return true;
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     player.seekBack();
+                    return true;
+                } else if (gesture ==  Gesture.TWO_TAP) {
+                    // Toggle subtitles on double tap
+                    subtitlesEnabled = !subtitlesEnabled;
+                    subtitleView.setVisibility(subtitlesEnabled ? View.VISIBLE : View.GONE);
+                    captionIcon.setImageResource(subtitlesEnabled ?
+                            R.drawable.cc_enabled : R.drawable.cc_disabled);
+                    Log.d(TAG, "Subtitles " + (subtitlesEnabled ? "enabled" : "disabled"));
                     return true;
                 }
                 return false;
