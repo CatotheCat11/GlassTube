@@ -3,7 +3,6 @@ package com.catothecat.glasstube;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,7 +22,6 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SubtitleView;
-import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.Slider;
@@ -221,7 +219,6 @@ public class VideoActivity extends Activity {
         gestureDetector.setBaseListener( new GestureDetector.BaseListener() {
             @Override
             public boolean onGesture(Gesture gesture) {
-                View current = getCurrentFocus();
                 if (controlBar != null) {
                     if (!controlsVisible) {
                         controlBar.setVisibility(View.VISIBLE);
