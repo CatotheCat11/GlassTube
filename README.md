@@ -17,3 +17,12 @@ This will load the first 20 results, which you can select from by tapping on a v
 The app can also be used to open YouTube links from other apps, such as QR code scanner apps. It will be shown as an option when choosing which app to use to open the link.
 
 <img height="200" alt="App selection" src="https://github.com/user-attachments/assets/e60eac9a-e9ec-417d-812a-47131dba1f53" />
+
+In the video player, there are a few controls you can use:
+1. Tap with one finger to play/pause the video
+2. Swipe forward to seek forward 15 seconds.
+3. Swipe backward to seek backward 5 seconds.
+4. Tap with two fingers to enable/disable closed captions.
+
+<img width="640" alt="Video player" src="https://github.com/user-attachments/assets/a0f08b80-d606-4452-acf9-80b55cb594e7" />
+
