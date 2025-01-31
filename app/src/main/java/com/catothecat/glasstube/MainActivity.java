@@ -182,6 +182,7 @@ public class MainActivity extends Activity {
                         mCards.add(card);
                         Glide.with(MainActivity.this)
                                 .asBitmap()
+                                .override(640, 360)
                                 .load(thumbnailUrl)
                                     .into(new CustomTarget<Bitmap>() { // Use CustomTarget to handle the Bitmap directly
                                         @Override
