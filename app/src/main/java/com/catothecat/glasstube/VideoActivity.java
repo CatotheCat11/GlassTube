@@ -28,10 +28,12 @@ import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.Slider;
 
+import org.schabi.newpipe.extractor.InfoItem;
 import org.schabi.newpipe.extractor.NewPipe;
 import org.schabi.newpipe.extractor.ServiceList;
 import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
+import org.schabi.newpipe.extractor.playlist.PlaylistInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamType;
 import org.schabi.newpipe.extractor.stream.SubtitlesStream;
@@ -50,6 +52,7 @@ public class VideoActivity extends Activity {
     private boolean subtitlesEnabled = false;
     private static final String TAG = "VideoActivity";
     String videoUrl = "";
+    Boolean playlist;
     AsyncTask<Void, Void, StreamInfo> task;
     private ImageView captionIcon;
     private LinearLayout controlBar;
@@ -68,17 +71,9 @@ public class VideoActivity extends Activity {
         playerView = findViewById(R.id.playerView);
         mSlider = Slider.from(playerView);
         mIndeterminate = mSlider.startIndeterminate();
-        videoUrl = getIntent().getStringExtra("url");
-        if (videoUrl == null) {
-            // No URL passed as extra; check for app picker intent
-            Intent intent = getIntent();
-            if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-                Uri data = intent.getData();
-                if (data != null) {
-                    videoUrl = data.toString();
-                }
-            }
-        }
+        Intent intent = getIntent();
+        videoUrl = intent.getStringExtra("url");
+        playlist = intent.getBooleanExtra("playlist", false);
         task = new FetchVideoStreamsTask().execute();
     }
 
@@ -190,7 +185,10 @@ public class VideoActivity extends Activity {
                 if (state != ExoPlayer.STATE_BUFFERING && mIndeterminate != null) {
                     mIndeterminate.hide();
                     mIndeterminate = null;
-                    player.removeListener(this);
+                }
+                if (state == ExoPlayer.STATE_ENDED && playlist) {
+                    setResult(RESULT_OK);
+                    finish();
                 }
             }
         });

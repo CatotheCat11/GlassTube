@@ -26,14 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <action android:name="com.google.android.glass.action.VOICE_TRIGGER" />
             </intent-filter>
-            <meta-data
-                android:name="com.google.android.glass.VoiceTrigger"
-                android:resource="@xml/voice_trigger_start" />
-        </activity>
-        <activity
-            android:name=".VideoActivity"
-            android:theme="@style/AppTheme"
-            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -51,7 +43,14 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
+            <meta-data
+                android:name="com.google.android.glass.VoiceTrigger"
+                android:resource="@xml/voice_trigger_start" />
         </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:theme="@style/AppTheme"
+            android:exported="true" />
     </application>
 
 </manifest>
