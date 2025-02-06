@@ -150,6 +150,8 @@ public class MainActivity extends Activity {
 
             } catch (Exception e) {
                 Log.e(TAG, "Error searching for videos", e);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                am.playSoundEffect(Sounds.ERROR);
                 return null;
             }
         }

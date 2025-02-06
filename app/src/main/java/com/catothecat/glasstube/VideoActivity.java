@@ -3,6 +3,7 @@ package com.catothecat.glasstube;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.ui.SubtitleView;
+import com.google.android.glass.media.Sounds;
 import com.google.android.glass.touchpad.Gesture;
 import com.google.android.glass.touchpad.GestureDetector;
 import com.google.android.glass.widget.Slider;
@@ -92,6 +94,8 @@ public class VideoActivity extends Activity {
                 return StreamInfo.getInfo(youtubeService, videoUrl);
             } catch (IOException | ExtractionException e) {
                 Log.e(TAG, "Error fetching stream info", e);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                am.playSoundEffect(Sounds.ERROR);
                 return null;
             }
         }
@@ -149,6 +153,8 @@ public class VideoActivity extends Activity {
                 playVideo(mediaItemBuilder.build(), false); //TODO: How to detect if video is 360?
             } catch (Exception e) {
                 Log.e(TAG, "Error processing stream info", e);
+                AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+                am.playSoundEffect(Sounds.ERROR);
                 finish();
             }
         }
