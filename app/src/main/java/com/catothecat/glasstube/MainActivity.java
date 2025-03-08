@@ -62,12 +62,13 @@ public class MainActivity extends Activity {
             Uri data = intent.getData();
             if (data != null) {
                 videoUrl = data.toString();
+                Log.d(TAG, "Video URL: " + videoUrl);
                 if (videoUrl.contains("list=")) {
                     setupCards();
                     new playlistView().execute();
                 } else {
                     Intent videoIntent = new Intent(MainActivity.this, VideoActivity.class);
-                    intent.putExtra("url", videoUrl);
+                    videoIntent.putExtra("url", videoUrl);
                     startActivity(videoIntent);
                 }
             }

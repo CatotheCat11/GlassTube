@@ -74,6 +74,7 @@ public class VideoActivity extends Activity {
         Intent intent = getIntent();
         videoUrl = intent.getStringExtra("url");
         playlist = intent.getBooleanExtra("playlist", false);
+        Log.d(TAG, "Playing video: " + videoUrl);
         task = new FetchVideoStreamsTask().execute();
     }
 
