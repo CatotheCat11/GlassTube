@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
             } else {
                 Log.d(TAG, "No voice result");
                 Intent recognizeIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Search for a video");
+                recognizeIntent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Search for a video");
                 startActivityForResult(recognizeIntent, SPEECH_REQUEST);
             }
         }
