@@ -36,6 +36,7 @@ import org.schabi.newpipe.extractor.StreamingService;
 import org.schabi.newpipe.extractor.exceptions.ExtractionException;
 import org.schabi.newpipe.extractor.linkhandler.LinkHandler;
 import org.schabi.newpipe.extractor.playlist.PlaylistInfo;
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem;
 import org.schabi.newpipe.extractor.search.SearchInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfo;
 import org.schabi.newpipe.extractor.stream.StreamInfoItem;
@@ -50,7 +51,7 @@ public class MainActivity extends Activity {
     private List<CardBuilder> mCards;
     private CardScrollView mCardScrollView;
     private ExampleCardScrollAdapter mAdapter;
-    private List<String> videoResults = new ArrayList<String>();
+    private List<InfoItem> videoResults = new ArrayList<InfoItem>();
     private static final int SPEECH_REQUEST = 0;
     String videoUrl = "";
 
@@ -138,12 +139,19 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 am.playSoundEffect(Sounds.TAP);
-                Intent videoIntent = new Intent(MainActivity.this, VideoActivity.class);
-                videoIntent.putExtra("url", videoResults.get(position));
-                if (videoUrl.contains("list=")) {
-                    videoIntent.putExtra("playlist", true);
+                if (videoResults.get(position).getInfoType().name().equals("STREAM")) {
+                    Intent videoIntent = new Intent(MainActivity.this, VideoActivity.class);
+                    videoIntent.putExtra("url", videoResults.get(position).getUrl());
+                    if (videoUrl.contains("list=")) {
+                        videoIntent.putExtra("playlist", true);
+                    }
+                    startActivityForResult(videoIntent, position);
+                } else if (videoResults.get(position).getInfoType().name().equals("PLAYLIST")) {
+                    Intent playlistIntent = new Intent(MainActivity.this, MainActivity.class);
+                    playlistIntent.setAction(Intent.ACTION_VIEW);
+                    playlistIntent.setData(Uri.parse(videoResults.get(position).getUrl()));
+                    startActivity(playlistIntent);
                 }
-                startActivityForResult(videoIntent, position);
             }
         });
     }
@@ -156,7 +164,7 @@ public class MainActivity extends Activity {
         } else if (mCards.size() - 1 != requestCode && resultCode == RESULT_OK) {
             mCardScrollView.setSelection(requestCode + 1);
             Intent videoIntent = new Intent(MainActivity.this, VideoActivity.class);
-            videoIntent.putExtra("url", videoResults.get(requestCode + 1));
+            videoIntent.putExtra("url", videoResults.get(requestCode + 1).getUrl());
             if (videoUrl.contains("list=")) {
                 videoIntent.putExtra("playlist", true);
             }
@@ -201,7 +209,15 @@ public class MainActivity extends Activity {
         protected void onPostExecute(List<InfoItem> results) {
             if (results != null) {
                 for (InfoItem item : results) {
-                    addVideoCard((StreamInfoItem) item);
+                    Log.d("Item info type name", item.getInfoType().name());
+                    Log.d("Item info type string", item.getInfoType().toString());
+                    if (item instanceof StreamInfoItem) {
+                        addVideoCard((StreamInfoItem) item);
+                        videoResults.add(item);
+                    } else if (item instanceof PlaylistInfoItem) {
+                        addPlaylistCard((PlaylistInfoItem) item);
+                        videoResults.add(item);
+                    }
                 }
             }
         }
@@ -233,6 +249,7 @@ public class MainActivity extends Activity {
             if (results != null) {
                 for (StreamInfoItem videoItem : results) {
                     addVideoCard(videoItem);
+                    videoResults.add(videoItem);
                 }
                 runOnUiThread(() -> {
                     if (videoUrl.contains("index=")) {
@@ -249,7 +266,6 @@ public class MainActivity extends Activity {
     private void addVideoCard(StreamInfoItem videoItem) {
         String title = videoItem.getName();
         String url = videoItem.getUrl();
-        videoResults.add(url);
         String uploaderName = videoItem.getUploaderName();
         String viewCount = round(videoItem.getViewCount());
         String duration;
@@ -315,6 +331,45 @@ public class MainActivity extends Activity {
             mAdapter.notifyDataSetChanged();
         });
     }
+
+    private void addPlaylistCard(PlaylistInfoItem playlistItem) {
+        String title = playlistItem.getName();
+        String url = playlistItem.getUrl();
+        String uploaderName = playlistItem.getUploaderName();
+        String streamCount = round(playlistItem.getStreamCount());
+        String thumbnailUrl = playlistItem.getThumbnails().get(0).getUrl();
+        CardBuilder card = new CardBuilder(MainActivity.this, CardBuilder.Layout.CAPTION)
+                .setText(title)
+                .setFootnote(uploaderName + " • " + streamCount + " videos");
+        mCards.add(card);
+        Glide.with(MainActivity.this)
+                .asBitmap()
+                .override(640, 360)
+                .load(thumbnailUrl)
+                .into(new CustomTarget<Bitmap>() { // Use CustomTarget to handle the Bitmap directly
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        card.addImage(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        super.onLoadFailed(errorDrawable);
+                        Log.e(TAG, "Image load failed");
+                    }
+                });
+
+        Log.d(TAG, "Found playlist: " + title + " by " + uploaderName + " at " + url);
+        runOnUiThread(() -> {
+            mAdapter.notifyDataSetChanged();
+        });
+    }
+
     private String formatDuration(long seconds) {
         if (seconds < 0) {
             return "Invalid duration";
