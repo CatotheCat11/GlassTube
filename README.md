@@ -12,7 +12,8 @@ The app can be used to search for YouTube videos. You can say "Ok glass, find a 
 
 This will load the first 20 results, which you can select from by tapping on a video's card.
 
-<img alt="Video selection" src="https://github.com/user-attachments/assets/4183fb29-025f-4dd9-a884-14f9a8e3d342" />
+<img alt="Video selection" src="https://github.com/user-attachments/assets/31ba6d55-8162-485b-bce9-15459f5f1bfa" />
+
 
 The app can also be used to open YouTube links from other apps, such as QR code scanner apps. It will be shown as an option when choosing which app to use to open the link.
 
