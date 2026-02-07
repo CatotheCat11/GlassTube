@@ -4,7 +4,7 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
-   ignore:
+    ignore:
       - dependency-type: "all"
     allow:
       - dependency-name: "com.github.teamnewpipe:NewPipeExtractor"
