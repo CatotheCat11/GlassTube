@@ -139,6 +139,7 @@ public class MainActivity extends Activity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 AudioManager am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
                 am.playSoundEffect(Sounds.TAP);
+                if (videoResults.isEmpty()) return;
                 if (videoResults.get(position).getInfoType().name().equals("STREAM")) {
                     Intent videoIntent = new Intent(MainActivity.this, VideoActivity.class);
                     videoIntent.putExtra("url", videoResults.get(position).getUrl());

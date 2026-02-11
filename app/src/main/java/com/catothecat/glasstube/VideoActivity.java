@@ -68,7 +68,17 @@ public class VideoActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
         );
+        if (getActionBar() != null) {
+            getActionBar().hide();
+        }
         playerView = findViewById(R.id.playerView);
+        playerView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_IMMERSIVE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN);
         mSlider = Slider.from(playerView);
         mIndeterminate = mSlider.startIndeterminate();
         Intent intent = getIntent();
@@ -249,6 +259,9 @@ public class VideoActivity extends Activity {
                 } else if (gesture == Gesture.SWIPE_LEFT) {
                     player.seekBack();
                     return true;
+                } else if (gesture == Gesture.SWIPE_DOWN) {
+                    finish();
+                    return true;
                 } else if (gesture ==  Gesture.TWO_TAP) {
                     // Toggle subtitles on double tap
                     subtitlesEnabled = !subtitlesEnabled;
@@ -263,14 +276,19 @@ public class VideoActivity extends Activity {
         });
         return gestureDetector;
     }
-    /*
-     * Send generic motion events to the gesture detector
-     */
+    /* Send generic motion events to the gesture detector */
     @Override
     public boolean onGenericMotionEvent(MotionEvent event) {
+        Log.d(TAG, "Got motion");
         if (mGestureDetector != null) {
             return mGestureDetector.onMotionEvent(event);
         }
         return false;
+    }
+
+    /* Forward touch events to the gesture detector */
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        return onGenericMotionEvent(event);
     }
 }
