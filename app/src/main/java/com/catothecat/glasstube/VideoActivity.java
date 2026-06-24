@@ -937,7 +937,7 @@ public class VideoActivity extends Activity {
             return "buffering";
         }
         if (state == ExoPlayer.STATE_READY) {
-            return player != null && player.isPlaying() ? "playing" : "ready";
+            return player != null && player.isPlaying() ? "playing" : "paused";
         }
         if (state == ExoPlayer.STATE_ENDED) {
             return "ended";
