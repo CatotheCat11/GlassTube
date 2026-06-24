@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">GlassAgent</string>
+    <string name="voice_trigger_prompt">Ask GlassAgent</string>
+</resources>

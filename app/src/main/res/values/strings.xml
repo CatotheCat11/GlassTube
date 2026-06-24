@@ -1,5 +1,10 @@
 <resources>
-    <string name="app_name">GlassTube</string>
+    <string name="app_name">GlassyTube</string>
+    <string name="voice_trigger_find_video">find a video</string>
+    <string name="voice_trigger_search_prompt">Search YouTube</string>
+    <string name="control_play">Play</string>
+    <string name="control_pause">Pause</string>
+    <string name="control_captions">Captions</string>
 
     <string name="app_picker_name">Applications</string>
     <string name="bookmark_picker_name">Bookmarks</string>

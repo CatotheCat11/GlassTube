@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<trigger command="FIND_A_VIDEO">
+    <input prompt="@string/voice_trigger_search_prompt" />
+</trigger>

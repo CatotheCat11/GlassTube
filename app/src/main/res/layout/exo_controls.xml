@@ -35,21 +35,24 @@
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/play"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/control_play"/>
 
         <ImageButton android:id="@id/exo_pause"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
             android:src="@drawable/pause"
-            android:background="@android:color/transparent"/>
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/control_pause"/>
 
         <ImageView
             android:id="@+id/exo_caption_icon"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
-            android:src="@drawable/cc_disabled"/>
+            android:src="@drawable/cc_disabled"
+            android:contentDescription="@string/control_captions"/>
 
         <TextView android:id="@id/exo_position"
             android:layout_width="wrap_content"

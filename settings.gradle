@@ -20,5 +20,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "GlassTube"
+rootProject.name = "GlassyTube"
 include ':app'
+include ':remoteagent'
+include ':glassagent'
